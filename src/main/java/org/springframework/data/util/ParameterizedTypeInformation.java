@@ -27,7 +27,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
-import java.util.stream.IntStream;
 
 import org.springframework.lang.Nullable;
 import org.springframework.util.StringUtils;
@@ -279,9 +278,9 @@ class ParameterizedTypeInformation<T> extends ParentTypeAwareTypeInformation<T> 
 
 		Map<TypeVariable<?>, Type> localTypeVariables = new HashMap<>(parent.getTypeVariableMap());
 
-		IntStream.range(0, typeParameters.length) //
-				.mapToObj(it -> Pair.of(typeParameters[it], flattenTypeVariable(arguments[it], localTypeVariables))) //
-				.forEach(it -> localTypeVariables.put(it.getFirst(), it.getSecond()));
+		for (int i = 0; i < typeParameters.length; ++i) {
+			localTypeVariables.put(typeParameters[i], arguments[i]);
+		}
 
 		return localTypeVariables;
 	}
