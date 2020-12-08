@@ -132,11 +132,11 @@ interface MethodLookups {
 		@Override
 		public List<MethodPredicate> getLookups() {
 
-			MethodPredicate detailedComparison = (invoked, candidate) -> Optional.of(candidate)
-					.filter(baseClassMethod -> baseClassMethod.getName().equals(invoked.getName()))// Right name
-					.filter(baseClassMethod -> baseClassMethod.getParameterCount() == invoked.getParameterCount())
-					.filter(baseClassMethod -> parametersMatch(invoked.getMethod(), baseClassMethod))// All parameters match
-					.isPresent();
+			MethodPredicate detailedComparison = (invoked, baseClassMethod) -> {
+				return baseClassMethod.getName().equals(invoked.getName()) // Right name
+					&& baseClassMethod.getParameterCount() == invoked.getParameterCount()
+					&& parametersMatch(invoked.getMethod(), baseClassMethod); // All parameters match
+			};
 
 			return Collections.singletonList(detailedComparison);
 		}
