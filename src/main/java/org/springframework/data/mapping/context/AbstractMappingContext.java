@@ -516,9 +516,8 @@ public abstract class AbstractMappingContext<E extends MutablePersistentEntity<?
 
 			ReflectionUtils.makeAccessible(field);
 
-			Property property = Optional.ofNullable(descriptors.get(fieldName))//
-					.map(it -> Property.of(type, field, it))//
-					.orElseGet(() -> Property.of(type, field));
+			final PropertyDescriptor descriptor = descriptors.get(fieldName);
+			Property property = descriptor != null ? Property.of(type, field, descriptor) : Property.of(type, field);
 
 			createAndRegisterProperty(property);
 
