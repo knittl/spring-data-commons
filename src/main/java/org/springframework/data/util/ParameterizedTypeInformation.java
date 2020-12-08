@@ -279,7 +279,7 @@ class ParameterizedTypeInformation<T> extends ParentTypeAwareTypeInformation<T> 
 		Map<TypeVariable<?>, Type> localTypeVariables = new HashMap<>(parent.getTypeVariableMap());
 
 		for (int i = 0; i < typeParameters.length; ++i) {
-			localTypeVariables.put(typeParameters[i], arguments[i]);
+			localTypeVariables.put(typeParameters[i], flattenTypeVariable(arguments[i], localTypeVariables));
 		}
 
 		return localTypeVariables;
