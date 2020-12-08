@@ -19,13 +19,11 @@ import java.lang.reflect.GenericDeclaration;
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
 import java.lang.reflect.TypeVariable;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
-import java.util.function.Supplier;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
@@ -243,14 +241,13 @@ interface MethodLookups {
 
 			MethodPredicate convertibleComparison = (invokedMethod, candidate) -> {
 
-				List<Supplier<Optional<Method>>> suppliers = new ArrayList<>();
-
 				if (usesParametersWithReactiveWrappers(invokedMethod.getMethod())) {
-					suppliers.add(() -> getMethodCandidate(invokedMethod, candidate, assignableWrapperMatch())); //
-					suppliers.add(() -> getMethodCandidate(invokedMethod, candidate, wrapperConversionMatch()));
+
+				    return getMethodCandidate(invokedMethod, candidate, assignableWrapperMatch()).isPresent()
+							|| getMethodCandidate(invokedMethod, candidate, wrapperConversionMatch()).isPresent();
 				}
 
-				return suppliers.stream().anyMatch(supplier -> supplier.get().isPresent());
+				return false;
 			};
 
 			MethodPredicate detailedComparison = (invokedMethod, candidate) -> getMethodCandidate(invokedMethod, candidate,
