@@ -148,7 +148,7 @@ class DefaultRepositoryInformation implements RepositoryInformation {
 			}
 		}
 
-		return Streamable.of(Collections.unmodifiableSet(result));
+		return Streamable.of(result);
 	}
 
 	/**
