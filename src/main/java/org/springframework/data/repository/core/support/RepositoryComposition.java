@@ -471,10 +471,14 @@ public class RepositoryComposition {
 		}
 
 		/**
-		 * @return {@link Stream} of {@link Method methods}.
+		 * @return {@link List} of {@link Method methods}.
 		 */
-		public Stream<Method> methods() {
-			return stream().flatMap(RepositoryFragment::methods);
+		public List<Method> methods() {
+			final ArrayList<Method> methods = new ArrayList<>();
+			for (final RepositoryFragment<?> fragment : fragments) {
+				Collections.addAll(methods, fragment.getSignatureContributor().getMethods());
+			}
+			return methods;
 		}
 
 		/**
@@ -534,16 +538,14 @@ public class RepositoryComposition {
 
 		@Nullable
 		private static Method findMethod(InvokedMethod invokedMethod, MethodLookup lookup,
-				Supplier<Stream<Method>> methodStreamSupplier) {
+				Supplier<List<Method>> methodsSupplier) {
 
 			for (MethodPredicate methodPredicate : lookup.getLookups()) {
 
-				Optional<Method> resolvedMethod = methodStreamSupplier.get()
-						.filter(it -> methodPredicate.test(invokedMethod, it)) //
-						.findFirst();
-
-				if (resolvedMethod.isPresent()) {
-					return resolvedMethod.get();
+				for (Method method : methodsSupplier.get()) {
+					if (methodPredicate.test(invokedMethod, method)) {
+						return method;
+					}
 				}
 			}
 
