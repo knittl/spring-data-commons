@@ -243,10 +243,6 @@ class TypeDiscoverer<S> implements TypeInformation<S> {
 			return Optional.of(descriptor);
 		}
 
-		List<Class<?>> superTypes = new ArrayList<>();
-		superTypes.addAll(Arrays.asList(type.getInterfaces()));
-		superTypes.add(type.getSuperclass());
-
 		return Streamable.of(type.getInterfaces()).stream()//
 				.flatMap(it -> Optionals.toStream(findPropertyDescriptor(it, fieldname)))//
 				.findFirst();
