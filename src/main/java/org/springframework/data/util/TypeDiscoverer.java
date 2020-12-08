@@ -515,7 +515,8 @@ class TypeDiscoverer<S> implements TypeInformation<S> {
 			}
 		}
 
-		throw new IllegalArgumentException(String.format("Type %s not contained in candidates %s!", type, candidates));
+		throw new IllegalArgumentException(String.format("Type %s not contained in candidates %s!", type,
+				Arrays.toString(candidates)));
 	}
 
 	/*
