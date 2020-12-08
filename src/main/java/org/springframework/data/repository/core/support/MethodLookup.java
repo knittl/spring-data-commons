@@ -22,7 +22,6 @@ import java.util.Objects;
 import java.util.function.BiPredicate;
 
 import org.springframework.util.Assert;
-import org.springframework.util.ObjectUtils;
 
 /**
  * Strategy interface providing {@link MethodPredicate predicates} to resolve a method called on a composite to its
@@ -133,7 +132,7 @@ public interface MethodLookup {
 			}
 
 			InvokedMethod that = (InvokedMethod) o;
-			return ObjectUtils.nullSafeEquals(method, that.method);
+			return Objects.equals(method, that.method);
 		}
 
 		/*
@@ -142,7 +141,7 @@ public interface MethodLookup {
 		 */
 		@Override
 		public int hashCode() {
-			return ObjectUtils.nullSafeHashCode(method);
+			return Objects.hashCode(method);
 		}
 
 		/*
