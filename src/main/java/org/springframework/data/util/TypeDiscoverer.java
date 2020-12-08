@@ -161,8 +161,7 @@ class TypeDiscoverer<S> implements TypeInformation<S> {
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	protected Class<S> resolveType(Type type) {
 
-		Map<TypeVariable, Type> map = new HashMap<>();
-		map.putAll(getTypeVariableMap());
+		Map<TypeVariable, Type> map = new HashMap<>(getTypeVariableMap());
 
 		return (Class<S>) GenericTypeResolver.resolveType(type, map);
 	}
