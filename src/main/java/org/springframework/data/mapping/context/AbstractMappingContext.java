@@ -28,6 +28,7 @@ import java.util.Set;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.function.Predicate;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.BeanUtils;
@@ -627,7 +628,7 @@ public abstract class AbstractMappingContext<E extends MutablePersistentEntity<?
 		 */
 		static class PropertyMatch {
 
-			private final @Nullable String namePattern;
+			private final @Nullable Pattern namePattern;
 			private final @Nullable String typeName;
 
 			/**
@@ -641,7 +642,7 @@ public abstract class AbstractMappingContext<E extends MutablePersistentEntity<?
 
 				Assert.isTrue(!(namePattern == null && typeName == null), "Either name pattern or type name must be given!");
 
-				this.namePattern = namePattern;
+				this.namePattern = namePattern != null ? Pattern.compile(namePattern) : null;
 				this.typeName = typeName;
 			}
 
@@ -657,7 +658,7 @@ public abstract class AbstractMappingContext<E extends MutablePersistentEntity<?
 				Assert.notNull(name, "Name must not be null!");
 				Assert.notNull(type, "Type must not be null!");
 
-				if (namePattern != null && !name.matches(namePattern)) {
+				if (namePattern != null && !namePattern.matcher(name).matches()) {
 					return false;
 				}
 
