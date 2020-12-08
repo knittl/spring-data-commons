@@ -243,15 +243,15 @@ interface MethodLookups {
 
 				if (usesParametersWithReactiveWrappers(invokedMethod.getMethod())) {
 
-				    return getMethodCandidate(invokedMethod, candidate, assignableWrapperMatch()).isPresent()
-							|| getMethodCandidate(invokedMethod, candidate, wrapperConversionMatch()).isPresent();
+				    return isMethodCandidate(invokedMethod, candidate, assignableWrapperMatch())
+							|| isMethodCandidate(invokedMethod, candidate, wrapperConversionMatch());
 				}
 
 				return false;
 			};
 
-			MethodPredicate detailedComparison = (invokedMethod, candidate) -> getMethodCandidate(invokedMethod, candidate,
-					matchParameterOrComponentType(repositoryMetadata.getRepositoryInterface())).isPresent();
+			MethodPredicate detailedComparison = (invokedMethod, candidate) -> isMethodCandidate(invokedMethod, candidate,
+					matchParameterOrComponentType(repositoryMetadata.getRepositoryInterface()));
 
 			return Arrays.asList(convertibleComparison, detailedComparison);
 		}
@@ -314,21 +314,20 @@ interface MethodLookups {
 		}
 
 		/**
-		 * Returns a candidate method from the base class for the given one or the method given in the first place if none
+		 * Tests a candidate method from the base class for the given one or the method given in the first place if none
 		 * one the base class matches.
 		 *
 		 * @param invokedMethod must not be {@literal null}.
 		 * @param candidate must not be {@literal null}.
 		 * @param predicate must not be {@literal null}.
-		 * @return
+		 * @return {@code true} if method is a candidate, otherwise lse.
 		 */
-		private static Optional<Method> getMethodCandidate(InvokedMethod invokedMethod, Method candidate,
-				Predicate<ParameterOverrideCriteria> predicate) {
+		private static boolean isMethodCandidate(InvokedMethod invokedMethod, Method candidate,
+												 Predicate<ParameterOverrideCriteria> predicate) {
 
-			return Optional.of(candidate)//
-					.filter(it -> invokedMethod.getName().equals(it.getName()))//
-					.filter(it -> parameterCountMatch(invokedMethod, it))//
-					.filter(it -> parametersMatch(invokedMethod.getMethod(), it, predicate));
+			return invokedMethod.getName().equals(candidate.getName())
+                    && parameterCountMatch(invokedMethod, candidate)
+                    && parametersMatch(invokedMethod.getMethod(), candidate, predicate);
 		}
 
 		/**
