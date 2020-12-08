@@ -16,10 +16,10 @@
 package org.springframework.data.repository.core.support;
 
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.function.BiPredicate;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import org.springframework.util.Assert;
 import org.springframework.util.ObjectUtils;
@@ -58,7 +58,16 @@ public interface MethodLookup {
 
 		Assert.notNull(other, "Other method lookup must not be null!");
 
-		return () -> Stream.concat(getLookups().stream(), other.getLookups().stream()).collect(Collectors.toList());
+		return () -> {
+			List<MethodPredicate> lookups = getLookups();
+			List<MethodPredicate> otherLookups = other.getLookups();
+
+			final ArrayList<MethodPredicate> allLookups = new ArrayList<>(lookups.size() + otherLookups.size());
+			allLookups.addAll(lookups);
+			allLookups.addAll(otherLookups);
+
+			return allLookups;
+		};
 	}
 
 	/**
