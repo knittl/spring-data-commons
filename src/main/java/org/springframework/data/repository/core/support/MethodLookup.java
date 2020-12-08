@@ -61,9 +61,14 @@ public interface MethodLookup {
 			List<MethodPredicate> lookups = getLookups();
 			List<MethodPredicate> otherLookups = other.getLookups();
 
+			// pre-size array and do *not* use `Collection#addAll`, which creates a copy of the collection's underlying array
 			final ArrayList<MethodPredicate> allLookups = new ArrayList<>(lookups.size() + otherLookups.size());
-			allLookups.addAll(lookups);
-			allLookups.addAll(otherLookups);
+			for (final MethodPredicate lookup : lookups) {
+				allLookups.add(lookup);
+			}
+			for (final MethodPredicate lookup : otherLookups) {
+				allLookups.add(lookup);
+			}
 
 			return allLookups;
 		};
